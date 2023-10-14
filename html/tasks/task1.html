@@ -15,51 +15,48 @@
         <a href="../index.html" class="navigation__link">Главная</a>
       </li>
       <li class="navigation__item">
-        <a href="#" class="navigation__link" style="text-shadow: 0 0 20px #205038; cursor: default;">Задание 1</a>
+        <a href="#" class="navigation__link" style="text-shadow: 0 0 20px #205038; cursor: default;">Калькулятор</a>
       </li>
       <li class="navigation__item">
-        <a href="task2.html" class="navigation__link">Задание 2</a>
+        <a href="task2.html" class="navigation__link">Слайдер</a>
       </li>
       <li class="navigation__item">
-        <a href="task3.html" class="navigation__link">Задание 3</a>
+        <a href="task3.html" class="navigation__link">Корзина</a>
       </li>
       <li class="navigation__item">
-        <a href="#" class="navigation__link">Задание 4</a>
+        <a href="task4.html" class="navigation__link">Эллипс</a>
       </li>
       <li class="navigation__item">
-        <a href="#" class="navigation__link">Задание 5</a>
-      </li>
-      <li class="navigation__item">
-        <a href="#" class="navigation__link">Задание 6</a>
+        <a href="task5.html" class="navigation__link">Года</a>
       </li>
     </ul>
   </nav>
-  <main class="main">
-    <h2 class="title">Мочалина Алина</h2>
-    <h3 class="subtitle">группа ПМИ-МЧМ-101М</h3>
-    <p class="text">Калькулятор</p>
-
+  <main>
     <div class="calc">
-      <!-- поле ввода 1-го числа -->
-      <input id="num1" />
-  
-      <!-- блок с кнопками -->
-      <div class="btns" id="operator_btns">
-        <button class="btn btn--operator" id="plus" onclick="op='+'">+</button>
-        <button class="btn btn--operator" id="minus" onclick="op='-'">-</button>
-        <button class="btn btn--operator" id="times" onclick="op='*'">x</button>
-        <button class="btn btn--operator" id="divide" onclick="op='/'">:</button>
+      <div id="calc__display"></div>
+      <div class="calc__buttons">
+          <div class="calc__button">C</div>
+          <div class="calc__button">/</div>
+          <div class="calc__button">*</div>
+          <div class="calc__button">&larr;</div>
+          <div class="calc__button">7</div>
+          <div class="calc__button">8</div>
+          <div class="calc__button">9</div>
+          <div class="calc__button">-</div>
+          <div class="calc__button">4</div>
+          <div class="calc__button">5</div>
+          <div class="calc__button">6</div>
+          <div class="calc__button">+</div>
+          <div class="calc__button">1</div>
+          <div class="calc__button">2</div>
+          <div class="calc__button">3</div>
+          <div class="calc__button">.</div>
+          <div class="calc__button">(</div>
+          <div class="calc__button">0</div>
+          <div class="calc__button">)</div>
+          <div id="equal" class="calc__button">=</div>
       </div>
-  
-      <!-- поле ввода второго числа -->
-      <input id="num2" />
-  
-      <!-- кнопка для расчётов -->
-      <button class="btn" id="calc" >Посчитать</button>
-      <button class="btn" id="clear" >Очистить</button>
-      <!-- здесь будет результат -->
-      <p id="result"></p>
-    </div>
+  </div>
   </main>
   
   <script src="../../js/calc.js"></script>
