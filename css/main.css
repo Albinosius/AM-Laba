@@ -63,6 +63,10 @@ img {
   justify-content: center;
 }
 
+.main__column {
+  flex-direction: column;
+}
+
 .main__pic {
   width: 30%;
   margin-right: 3%;
@@ -717,4 +721,41 @@ img {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+}
+
+/* Японские года */
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+.year {
+  margin-bottom: 20px;
+}
+
+.year__btn {
+  margin-bottom: 20px;
+}
+
+.year__pic {
+  color: black;
+}
+
+.green {
+  color: green;
+}
+.red {
+  color: red;
+}
+.yellow {
+  color: yellow;
+}
+.white {
+  color: white;
+}
+.black {
+  color: black;
 }
