@@ -1,46 +1,27 @@
-// переменная, в которой хранится выбранное математическое действие
-var op;
+let display = document.getElementById('calc__display');
 
-// функция расчёта
-document.querySelector('#calc').addEventListener('click', function() {
-  // переменная для результата
-  var result;
-  // получаем первое и второе число
-  var num1 = Number(document.getElementById("num1").value);
-  var num2 = Number(document.getElementById("num2").value);
+let buttons = Array.from(document.getElementsByClassName('calc__button'));
 
-  // смотрим, что было в переменной с действием, и действуем исходя из этого
-  switch (op) {
-    case '+':
-      result = num1 + num2;
-      break;
-    case '-':
-      result = num1 - num2;
-      break;
-    case '*':
-      result = num1 * num2;
-      break;
-    case '/':
-      result = num1 / num2;
-      break;
-  }
-
-  // отправляем результат на страницу
-  document.getElementById("result").innerHTML = result;
-});
-
-// фнкция очистки
-document.querySelector('#clear').addEventListener('click', function() {
-  // очищаем введенные данные
-  var num1 = document.getElementById("num1");
-  num1.value = '';
-  var num2 = document.getElementById("num2");
-  num2.value = '';
-
-  // очищаем результат
-  document.getElementById("result").innerHTML = '';
-});
-
-document.querySelectorAll('.btn--operator').addEventListener('click', function(e) {
-  e.preentDeafolt
+buttons.map( button => {
+    button.addEventListener('click', (e) => {
+        switch(e.target.innerText){
+            case 'C':
+                display.innerText = '';
+                break;
+            case '=':
+                try{
+                    display.innerText = eval(display.innerText);
+                } catch {
+                    display.innerText = "Error"
+                }
+                break;
+            case '←':
+                if (display.innerText){
+                   display.innerText = display.innerText.slice(0, -1);
+                }
+                break;
+            default:
+                display.innerText += e.target.innerText;
+        }
+    });
 });
