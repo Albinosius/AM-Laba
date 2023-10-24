@@ -1,173 +1,100 @@
-// Утилиты
+document.addEventListener("DOMContentLoaded", function () {
+  const addToCartButtons = document.querySelectorAll(".add-to-cart");
+  const cartIcon = document.querySelector(".cart-icon");
+  const cartPopup = document.querySelector(".cart-popup");
+  const cartItems = document.querySelector(".cart-items");
+  // const total = document.querySelector(".total-price");
 
-function toNum(str) {
-  const num = Number(str.replace(/ /g, ""));
-  return num;
-}
+  let cart = [];
 
-function toCurrency(num) {
-  const format = new Intl.NumberFormat("ru-RU", {
-    style: "currency",
-    currency: "RUB",
-    minimumFractionDigits: 0,
-  }).format(num);
-  return format;
-}
+  addToCartButtons.forEach(button => {
+    button.addEventListener("click", function () {
+      const product = button.parentElement;
+      const productName = product.querySelector("h3").textContent;
+      const productPrice = parseFloat(product.querySelector(".price").textContent);
 
-// Корзина
-
-const cardAddArr = Array.from(document.querySelectorAll(".card__add"));
-const cartNum = document.querySelector("#cart_num");
-const cart = document.querySelector("#cart");
-
-class Cart {
-  products;
-  constructor() {
-    this.products = [];
-  }
-  get count() {
-    return this.products.length;
-  }
-  addProduct(product) {
-    this.products.push(product);
-  }
-  removeProduct(index) {
-    this.products.splice(index, 1);
-  }
-  get cost() {
-    const prices = this.products.map((product) => {
-      return toNum(product.price);
+      addToCart(productName, productPrice);
+      updateCart();
     });
-    const sum = prices.reduce((acc, num) => {
-      return acc + num;
-    }, 0);
-    return sum;
-  }
-  // get costDiscount() {
-  //   const prices = this.products.map((product) => {
-  //     return toNum(product.priceDiscount);
-  //   });
-  //   const sum = prices.reduce((acc, num) => {
-  //     return acc + num;
-  //   }, 0);
-  //   return sum;
-  // }
-  // get discount() {
-  //   return this.cost - this.costDiscount;
-  // }
-}
-
-class Product {
-  imageSrc;
-  name;
-  price;
-  // priceDiscount;
-  constructor(card) {
-    this.imageSrc = card.querySelector(".card__image").children[0].src;
-    this.name = card.querySelector(".card__title").innerText;
-    this.price = card.querySelector(".card__price").innerText;
-    // this.priceDiscount = card.querySelector(".card__price--discount").innerText;
-  }
-}
-
-const myCart = new Cart();
-
-if (localStorage.getItem("cart") == null) {
-  localStorage.setItem("cart", JSON.stringify(myCart));
-}
-
-const savedCart = JSON.parse(localStorage.getItem("cart"));
-myCart.products = savedCart.products;
-cartNum.textContent = myCart.count;
-
-myCart.products = cardAddArr.forEach((cardAdd) => {
-  cardAdd.addEventListener("click", (e) => {
-    e.preventDefault();
-    const card = e.target.closest(".card");
-    const product = new Product(card);
-    const savedCart = JSON.parse(localStorage.getItem("cart"));
-    myCart.products = savedCart.products;
-    myCart.addProduct(product);
-    localStorage.setItem("cart", JSON.stringify(myCart));
-    cartNum.textContent = myCart.count;
   });
-});
 
-// Попап
+  function addToCart(name, price) {
+    const existingItem = cart.find(item => item.name === name);
 
-const popup = document.querySelector(".popup");
-const popupClose = document.querySelector("#popup_close");
-const body = document.body;
-const popupContainer = document.querySelector("#popup_container");
-const popupProductList = document.querySelector("#popup_product_list");
-const popupCost = document.querySelector("#popup_cost");
-const popupDiscount = document.querySelector("#popup_discount");
-const popupCostDiscount = document.querySelector("#popup_cost_discount");
+    if (existingItem) {
+      existingItem.quantity++;
+    } else {
+      cart.push({
+        name: name,
+        price: price,
+        quantity: 1
+      });
+    }
+  }
 
-cart.addEventListener("click", (e) => {
-  e.preventDefault();
-  popup.classList.add("popup--open");
-  body.classList.add("lock");
-  popupContainerFill();
-});
+  function updateCart() {
+    cartItems.innerHTML = "";
+    let totalPrice = 0;
 
-function popupContainerFill() {
-  popupProductList.innerHTML = null;
-  const savedCart = JSON.parse(localStorage.getItem("cart"));
-  myCart.products = savedCart.products;
-  const productsHTML = myCart.products.map((product) => {
-    const productItem = document.createElement("div");
-    productItem.classList.add("popup__product");
+    const cartName = document.createElement("h3");
+    cartName.classList.add("cart-title");
+    cartName.textContent = "Корзина";
 
-    const productWrap1 = document.createElement("div");
-    productWrap1.classList.add("popup__product-wrap");
-    const productWrap2 = document.createElement("div");
-    productWrap2.classList.add("popup__product-wrap");
+    cartItems.appendChild(cartName);
 
-    const productImage = document.createElement("img");
-    productImage.classList.add("popup__product-image");
-    productImage.setAttribute("src", product.imageSrc);
+    cart.forEach(item => {
+      const itemElement = document.createElement("div");
+      itemElement.classList.add("item");
+      itemElement.classList.add("flex");
+      
+      const itemName = document.createElement("span");
+      itemName.classList.add("item-name");
+      itemName.textContent = item.name;
 
-    const productTitle = document.createElement("h2");
-    productTitle.classList.add("popup__product-title");
-    productTitle.innerHTML = product.name;
+      const itemQuantity = document.createElement("input");
+      itemQuantity.classList.add("item-quantity");
+      itemQuantity.type = "number";
+      itemQuantity.setAttribute("min", "0");
+      itemQuantity.value = item.quantity;
+      itemQuantity.addEventListener("input", function () {
+        item.quantity = parseInt(itemQuantity.value);
+        updateCart();
+      });
 
-    const productPrice = document.createElement("div");
-    productPrice.classList.add("popup__product-price");
-    productPrice.innerHTML = toCurrency(toNum(product.price));
+      const itemPrice = document.createElement("span");
+      itemPrice.classList.add("item-price");
+      itemPrice.textContent = (item.price * item.quantity).toFixed(2);
 
-    const productDelete = document.createElement("button");
-    productDelete.classList.add("popup__product-delete");
-    productDelete.innerHTML = "&#10006;";
+      itemElement.appendChild(itemName);
+      itemElement.appendChild(itemQuantity);
+      itemElement.appendChild(itemPrice);
 
-    productDelete.addEventListener("click", () => {
-      myCart.removeProduct(product);
-      localStorage.setItem("cart", JSON.stringify(myCart));
-      popupContainerFill();
+      cartItems.appendChild(itemElement);
+      // cartItems.appendChild(total);
 
-      cartNum.textContent = myCart.count;
+      // item.price * item.quantity;
+      totalPrice += item.price * item.quantity;
     });
 
-    productWrap1.appendChild(productImage);
-    productWrap1.appendChild(productTitle);
-    productWrap2.appendChild(productPrice);
-    productWrap2.appendChild(productDelete);
-    productItem.appendChild(productWrap1);
-    productItem.appendChild(productWrap2);
+    const total = document.createElement("div");
+    total.classList.add("item");
 
-    return productItem;
+    const totalName = document.createElement("span");
+    totalName.textContent = "Итого:";
+
+    const totalPriceEl = document.createElement("span");
+    totalPriceEl.classList.add("total-price");
+    totalPriceEl.textContent = (totalPrice);
+
+    total.appendChild(totalName);
+    total.appendChild(totalPriceEl);
+
+    cartItems.appendChild(total);
+
+    // total.textContent = totalPrice.toFixed(2);
+  }
+
+  cartIcon.addEventListener("click", function () {
+    cartPopup.style.display = cartPopup.style.display === "none" ? "block" : "none";
   });
-
-  productsHTML.forEach((productHTML) => {
-    popupProductList.appendChild(productHTML);
-  });
-
-  popupCost.value = toCurrency(myCart.cost);
-}
-
-popupClose.addEventListener("click", (e) => {
-  e.preventDefault();
-  popup.classList.remove("popup--open");
-  body.classList.remove("lock");
-  // popupContainerFill();
 });
