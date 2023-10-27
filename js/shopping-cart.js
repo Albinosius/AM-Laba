@@ -12,22 +12,26 @@ document.addEventListener("DOMContentLoaded", function () {
       const product = button.parentElement;
       const productName = product.querySelector("h3").textContent;
       const productPrice = parseFloat(product.querySelector(".price").textContent);
+      const productQuantity = product.querySelector(".product__quantity").value;
+      const id = product.querySelector(".product__quantity").id;
 
-      addToCart(productName, productPrice);
+      addToCart(productName, productPrice, productQuantity, id);
       updateCart();
+      // console.log(id);
     });
   });
 
-  function addToCart(name, price) {
+  function addToCart(name, price, quantity, id) {
     const existingItem = cart.find(item => item.name === name);
 
     if (existingItem) {
-      existingItem.quantity++;
+      existingItem.quantity =+ quantity;
     } else {
       cart.push({
         name: name,
         price: price,
-        quantity: 1
+        quantity: quantity,
+        id: id
       });
     }
   }
@@ -55,9 +59,15 @@ document.addEventListener("DOMContentLoaded", function () {
       itemQuantity.classList.add("item-quantity");
       itemQuantity.type = "number";
       itemQuantity.setAttribute("min", "0");
-      itemQuantity.value = item.quantity;
+      console.log("item.quantity =", item.quantity);
+
+      itemQuantity.value = itemQuantity.value + item.quantity;
+      console.log("itemQuantity.value =+ item.quantity =", itemQuantity.value);
       itemQuantity.addEventListener("input", function () {
-        item.quantity = parseInt(itemQuantity.value);
+        item.quantity = itemQuantity.value;
+        const id = item.id;
+        const input = document.getElementById(id);
+        input.value = itemQuantity.value;
         updateCart();
       });
 
@@ -91,8 +101,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     cartItems.appendChild(total);
 
+
+
     // total.textContent = totalPrice.toFixed(2);
   }
+
+
 
   cartIcon.addEventListener("click", function () {
     cartPopup.style.display = cartPopup.style.display === "none" ? "block" : "none";
